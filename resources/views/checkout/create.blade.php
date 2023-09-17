@@ -34,29 +34,55 @@
                                 @csrf
                                 <div class="mb-4">
                                     <label class="form-label">Full Name</label>
-                                    <input name="full_name" type="text" class="form-control" value="{{ Auth::user()->name }}" />
+                                    <input name="full_name" type="text"
+                                        class="form-control @error('full_name') is-invalid @enderror"
+                                        value="{{ Auth::user()->name }}" required />
+                                    @error('full_name')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Email Address</label>
-                                    <input name="email" type="email" class="form-control" value="{{ Auth::user()->email }}" />
+                                    <input name="email" type="email"
+                                        class="form-control @error('email') is-invalid @enderror"
+                                        value="{{ Auth::user()->email }}" required />
+                                    @error('email')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Occupation</label>
-                                    <input name="occupation" type="text" class="form-control" value="{{ Auth::user()->occupation }}" />
+                                    <input name="occupation" type="text"
+                                        class="form-control @error('occupation') is-invalid @enderror"
+                                        value="{{ old('occupation') ?: Auth::user()->occupation }}" required />
+                                    @error('occupation')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Card Number</label>
-                                    <input name="card_number" type="number" class="form-control"/>
+                                    <input name="card_number" type="number"
+                                        class="form-control @error('card_number') is-invalid @enderror"
+                                        value="{{ old('card_number') ?: '' }}" required />
+                                    @error('card_number')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="mb-5">
                                     <div class="row">
                                         <div class="col-lg-6 col-12">
                                             <label class="form-label">Expired</label>
-                                            <input name="expired" type="month" class="form-control"/>
+                                            <input name="expired" type="month" class="form-control @error('expired') is-invalid @enderror" value="{{ old('expired') ?: '' }}" required />
+                                            @error('expired')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                         <div class="col-lg-6 col-12">
                                             <label class="form-label">CVC</label>
-                                            <input name="cvc" type="text" class="form-control" maxlength="3"/>
+                                            <input name="cvc" type="text" class="form-control @error('cvc') is-invalid @enderror"  value="{{ old('cvc') ?: '' }}" maxlength="3" required />
+                                            @error('cvc')
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
