@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Camps;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Checkout extends Model
 {
@@ -28,5 +30,10 @@ class Checkout extends Model
     public function Camp()
     {
         return $this->belongsTo(Camps::class);
+    }
+
+    public function User()
+    {
+        return $this->belongsTo(User::class);
     }
 }
