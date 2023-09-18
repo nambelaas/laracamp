@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use Midtrans;
+use Midtrans\Snap;
 use Midtrans\Config;
 use App\Models\Camps;
 use App\Models\Checkout;
@@ -19,7 +20,7 @@ class CheckoutController extends Controller
 {
     public function __construct()
     {
-        Config::$clientKey = env('MIDTRANS_CLIENTKEY');
+        // Config::$clientKey = env('MIDTRANS_CLIENTKEY');
         Config::$serverKey = env('MIDTRANS_SERVERKEY');
         Config::$isProduction = env('MIDTRANS_IS_PRODUCTION');
         Config::$isSanitized = env('MIDTRANS_IS_SANITIZED');
@@ -64,12 +65,13 @@ class CheckoutController extends Controller
         $data['user_id'] = Auth::id();
         $data['camp_id'] = $camp->id;
 
-        // return $data;
         // update user table
         $user = Auth::user();
         $user->email = $data['email'];
         $user->name = $data['full_name'];
         $user->occupation = $data['occupation'];
+        $user->phone = $data['phone'];
+        $user->address = $data['address'];
         $user->save();
 
         // create checkout
@@ -143,22 +145,21 @@ class CheckoutController extends Controller
             'gross_amount' => $checkout->Camp->price * 1000,
         ];
 
-        $itemDetails = [
+        $itemDetails[] = [
             'id' => $orderId,
-            'price' => $checkout->Camp->price,
+            'price' => $checkout->Camp->price * 1000,
             'quantity' => 1,
             'name' => 'Payment for {$checkout->Camp->title} camp'
         ];
 
-        $cleanAddress = trim($checkout->User->address);
-        $dataAddress = explode(',', $cleanAddress);
+        $dataAddress = explode(', ', $checkout->User->address);
 
         $userData = [
             'first_name' => $checkout->User->name,
             'last_name' => '',
-            'address' => $dataAddress[0],
-            'city' => $dataAddress[1] ?? '',
-            'postal_code' => $dataAddress[2] ?? '',
+            'address' => $checkout->User->address,
+            'city' =>  '',
+            'postal_code' =>  '',
             'phone' => $checkout->User->phone,
             'country_code' => 'IDN'
         ];
@@ -180,7 +181,7 @@ class CheckoutController extends Controller
 
         try {
             //code...
-            $paymentUrl = \Midtrans\Snap::createTransaction($midtransParam)->redirect_url;
+            $paymentUrl = Snap::createTransaction($midtransParam)->redirect_url;
             $checkout->midtrans_url = $paymentUrl;
             $checkout->save();
 
@@ -192,7 +193,7 @@ class CheckoutController extends Controller
 
     public function midtransCallback(Request $request)
     {
-        $notif = new Notification();
+        $notif = $request->method() === 'POST' ? new Notification(): Midtrans\Transaction::status($request->order_id);
 
         $transaction_status = $notif->transaction_status;
         $fraud = $notif->fraud_status;
