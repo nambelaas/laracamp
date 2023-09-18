@@ -36,11 +36,7 @@
                         @endif
                         <ul class="dropdown-menu" aria-label="dropdownMenuLink" style="right: 0; left: auto;">
                             <li>
-                                @if (Auth::user()->is_admin)
-                                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item">My Dashboard</a>
-                                @else
-                                    <a href="{{ route('user.dashboard') }}" class="dropdown-item">My Dashboard</a>
-                                @endif
+                                <a href="{{ route('dashboard') }}" class="dropdown-item">My Dashboard</a>
                             </li>
                             <li>
                                 <a href="#" class="dropdown-item"

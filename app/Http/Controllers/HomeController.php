@@ -13,7 +13,7 @@ class HomeController extends Controller
             case true:
                 return redirect(route('admin.dashboard'));
                 break;
-            
+
             default:
                 return redirect(route('user.dashboard'));
                 break;
