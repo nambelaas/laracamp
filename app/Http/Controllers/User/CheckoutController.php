@@ -150,12 +150,15 @@ class CheckoutController extends Controller
             'name' => 'Payment for {$checkout->Camp->title} camp'
         ];
 
+        $cleanAddress = trim($checkout->User->address);
+        $dataAddress = explode(',', $cleanAddress);
+
         $userData = [
             'first_name' => $checkout->User->name,
             'last_name' => '',
-            'address' => $checkout->User->address,
-            'city' => '',
-            'postal_code' => '',
+            'address' => $dataAddress[0],
+            'city' => $dataAddress[1] ?? '',
+            'postal_code' => $dataAddress[2] ?? '',
             'phone' => $checkout->User->phone,
             'country_code' => 'IDN'
         ];
@@ -173,7 +176,6 @@ class CheckoutController extends Controller
             'transaction_details' => $transactionDetails,
             'customer_details' => $customerDetails,
             'item_details' => $itemDetails,
-            ''
         ];
 
         try {
