@@ -77,8 +77,6 @@ class CheckoutController extends Controller
         // create checkout
         $checkout = Checkout::create($data);
 
-        $this->getSnapRedirect($checkout);
-
         // send email
         Mail::to(Auth::user()->email)->send(new AfterCheckout($checkout));
 
